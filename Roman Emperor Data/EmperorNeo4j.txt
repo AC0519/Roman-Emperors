@@ -1,0 +1,19 @@
+
+#########
+LOAD CSV WITH HEADERS FROM "file:///C:/roman-emperors.csv" AS data
+MERGE(emperor:Name{name:data.Name,Full_Name:data.Full_Name,Birth_City:data.Birth_City,Birth_Province:data.Birth_Province,
+Dynasty:data.Dynasty,Succession_to_Throne:data.Succession})
+MERGE(succession:Succesion{name:data.Succession})
+MERGE(causeofdeath:Cause_of_Death{name:data.Cause})
+MERGE(killer:Killer{name:data.Killer})
+MERGE(emperor)-[how_achieved_throne:How_Achieved_Throne]-(succession)
+MERGE(emperor)-[died_from:Died_from{Cause_of_Death:data.Cause}]-(causeofdeath)
+MERGE(emperor)-[killed_by:Killed_by{Killer:data.Killer}]-(killer)
+RETURN emperor, causeofdeath, killer, succession
+
+
+
+#########
+MATCH(emperor:Name)-[killed_by:Killed_by]-(killer:Killer)
+WHERE(emperor.name="Augustus")
+RETURN emperor, killer
