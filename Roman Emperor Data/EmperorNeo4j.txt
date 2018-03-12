@@ -17,3 +17,11 @@ RETURN emperor, causeofdeath, killer, succession
 MATCH(emperor:Name)-[killed_by:Killed_by]-(killer:Killer)
 WHERE(emperor.name="Augustus")
 RETURN emperor, killer
+
+MATCH (emperor)-[died_from:Died_from]-(causeofdeath)
+WHERE causeofdeath.name='Assassination'
+RETURN COUNT(emperor) AS Roman_Emperors_Who_Died_by_Assassination
+
+MATCH (emperor)-[:Killed_by]-(killer)
+WHERE killer.name='Wife'
+RETURN emperor,killer
